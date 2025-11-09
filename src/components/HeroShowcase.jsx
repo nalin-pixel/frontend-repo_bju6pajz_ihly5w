@@ -1,44 +1,27 @@
-import { useEffect, useState } from 'react';
+import Spline from '@splinetool/react-spline';
 
 export default function HeroShowcase() {
-  const [SplineComp, setSplineComp] = useState(null);
-
-  useEffect(() => {
-    let mounted = true;
-    // Dynamically import Spline on client to avoid SSR/build issues if the package fails
-    import('@splinetool/react-spline')
-      .then((mod) => {
-        if (mounted) setSplineComp(() => mod.default);
-      })
-      .catch(() => {
-        // If Spline fails to load, keep fallback background
-        if (mounted) setSplineComp(null);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   return (
     <section className="relative w-full h-[58vh] md:h-[64vh] lg:h-[68vh] xl:h-[72vh] overflow-hidden">
       {/* Background base */}
       <div className="absolute inset-0 bg-[#002147]" />
 
-      {/* Spline 3D scene or graceful fallback */}
+      {/* Graceful image fallback underlay */}
       <div className="absolute inset-0">
-        {SplineComp ? (
-          <SplineComp
-            scene="https://prod.spline.design/6GqkVbR8QqM1JrQp/scene.splinecode"
-            style={{ width: '100%', height: '100%' }}
-          />
-        ) : (
-          <img
-            src="https://images.unsplash.com/photo-1523705480679-b6f9f6c1f8e5?q=80&w=1920&auto=format&fit=crop"
-            alt="Ocean horizon at sunrise"
-            className="w-full h-full object-cover opacity-60"
-            loading="lazy"
-          />
-        )}
+        <img
+          src="https://images.unsplash.com/photo-1523705480679-b6f9f6c1f8e5?q=80&w=1920&auto=format&fit=crop"
+          alt="Ocean horizon at sunrise"
+          className="w-full h-full object-cover opacity-60"
+          loading="lazy"
+        />
+      </div>
+
+      {/* Spline 3D scene */}
+      <div className="absolute inset-0">
+        <Spline
+          scene="https://prod.spline.design/6GqkVbR8QqM1JrQp/scene.splinecode"
+          style={{ width: '100%', height: '100%' }}
+        />
       </div>
 
       {/* Gradient overlays - do not block interactions */}
